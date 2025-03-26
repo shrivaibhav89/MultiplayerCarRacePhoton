@@ -1,7 +1,6 @@
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -9,15 +8,15 @@ public class NetworkManager : MonoBehaviour
 
     private void Start()
     {
-        // _networkRunner = gameObject.AddComponent<NetworkRunner>();
-        // _networkRunner.ProvideInput = true;
+        _networkRunner = gameObject.AddComponent<NetworkRunner>();
+        _networkRunner.ProvideInput = true;
 
-        // _networkRunner.StartGame(new StartGameArgs
-        // {
-        //     GameMode = GameMode.AutoHostOrClient,
-        //     SessionName = "CarRaceRoom",
-        //     Scene = _networkRunner.SimulationUnityScene, // Corrected Line
-        // });
-        
+        _networkRunner.StartGame(new StartGameArgs
+        {
+            GameMode = GameMode.AutoHostOrClient,
+            SessionName = "CarRaceRoom",
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>() // Use the default scene manager
+        });
     }
+
 }
