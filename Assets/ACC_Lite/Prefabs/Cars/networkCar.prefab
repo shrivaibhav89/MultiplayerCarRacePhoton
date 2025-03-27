@@ -5112,7 +5112,7 @@ GameObject:
   - component: {fileID: 114834290597317844}
   - component: {fileID: 81554163586931898}
   - component: {fileID: -7788692305612893458}
-  - component: {fileID: 6332573226166200157}
+  - component: {fileID: 8921723030503002444}
   m_Layer: 8
   m_Name: networkCar
   m_TagString: Car
@@ -5133,6 +5133,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4081316503017102}
+  - {fileID: 4113215784759456}
   - {fileID: 8388904554027033027}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -5220,10 +5222,10 @@ MonoBehaviour:
   BackFireParticles:
   - {fileID: 198384355648039756}
   CarConfig:
-    MaxSteerAngle: 42
+    MaxSteerAngle: 45
     DriveType: 2
     AutomaticGearBox: 1
-    MaxMotorTorque: 800
+    MaxMotorTorque: 400
     MotorTorqueFromRpmCurve:
       serializedVersion: 2
       m_Curve:
@@ -5372,9 +5374,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 114098881066837142}
   - {fileID: 114834290597317844}
-  - {fileID: 6332573226166200157}
+  - {fileID: 8921723030503002444}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &6332573226166200157
+--- !u!114 &8921723030503002444
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5388,8 +5390,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 1
-  _interpolationTarget: {fileID: 8388904554027033027}
+  SyncParent: 0
+  _interpolationTarget: {fileID: 0}
   UsePreciseRotation: 0
   UseRenderSleepThresholds: 1
   RenderThresholds:
@@ -5538,8 +5540,8 @@ MonoBehaviour:
     Spring: 0.5833333
     Damper: 0.45
     TargetPoint: 0.5
-    ForwardFriction: 0.4
-    SidewaysFriction: 0.4
+    ForwardFriction: 0.5
+    SidewaysFriction: 0
   m_WheelCollider: {fileID: 146051005712781346}
   m_RB: {fileID: 54073378191953874}
 --- !u!146 &146051005712781346
@@ -5754,8 +5756,8 @@ MonoBehaviour:
     Spring: 0.5833333
     Damper: 0.45
     TargetPoint: 0.5
-    ForwardFriction: 0.4
-    SidewaysFriction: 0.4
+    ForwardFriction: 0.5
+    SidewaysFriction: 0
   m_WheelCollider: {fileID: 146816972422453170}
   m_RB: {fileID: 54073378191953874}
 --- !u!146 &146816972422453170
@@ -5829,7 +5831,7 @@ Transform:
   - {fileID: 4682011957136850}
   - {fileID: 4273551746677616}
   - {fileID: 4392599904626698}
-  m_Father: {fileID: 8388904554027033027}
+  m_Father: {fileID: 4400517460069692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1663908065109612
 GameObject:
@@ -6480,7 +6482,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8388904554027033027}
+  m_Father: {fileID: 4400517460069692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2673686126413030569
 GameObject:
@@ -6513,7 +6515,5 @@ Transform:
   m_Children:
   - {fileID: 4646879546700360}
   - {fileID: 4533949423825890}
-  - {fileID: 4113215784759456}
-  - {fileID: 4081316503017102}
   m_Father: {fileID: 4400517460069692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

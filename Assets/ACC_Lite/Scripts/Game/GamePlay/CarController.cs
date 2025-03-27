@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using Fusion.Addons.Physics;
 
 /// <summary>
 /// Main car controller
@@ -67,6 +68,7 @@ public class CarController : NetworkBehaviour
 	float[] AllGearsRatio;                                                           //All gears (Reverce, neutral and all forward).
 
 	Rigidbody _RB;
+	 private NetworkRigidbody3D _networkRigidbody;
 	public Rigidbody RB
 	{
 		get
@@ -95,6 +97,8 @@ public class CarController : NetworkBehaviour
 
 	private void Awake()
 	{
+		_networkRigidbody = GetComponent<NetworkRigidbody3D>();
+
 		RB.centerOfMass = COM.localPosition;
 
 		//Copy wheels in public property

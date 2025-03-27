@@ -1,27 +1,61 @@
 using Fusion;
 using Fusion.Sockets;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
+    [SerializeField] private Transform sawnPosition;
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+
+        //Transform playerTransform = null;
         if (runner.IsServer)
         {
             // Create a unique position for the player
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 1, 0);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 8, 0);
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, sawnPosition.position * UnityEngine.Random.Range(0, 3), Quaternion.identity, player);
+            networkPlayerObject.name = "Player " + player.RawEncoded;
+
             // Keep track of the player avatars for easy access
             _spawnedCharacters.Add(player, networkPlayerObject);
+
+        }
+        StartCoroutine(DelayedPlayerSync(runner, player));
+        Debug.LogError("OnPlayerJoined" + runner.IsClient + " And  " + player.RawEncoded);
+
+    }
+    private IEnumerator DelayedPlayerSync(NetworkRunner Runner, PlayerRef player)
+    {
+        yield return new WaitForSeconds(1f);  // Slight delay to allow spawning
+
+        NetworkObject[] allObjects = FindObjectsOfType<NetworkObject>();
+        foreach (var obj in allObjects)
+        {
+            if (obj.HasInputAuthority)
+            {
+                obj.name = " local Player " + obj.Runner.LocalPlayer.RawEncoded;
+                if (obj.Runner.IsClient)
+                {
+                    Runner.SetIsSimulated(obj, false);
+                }
+                else
+                {
+                    Runner.SetIsSimulated(obj, true);
+                }
+                //  _spawnedCharacters[player] = obj;
+                GameManager.Instance.SetFollowTarget(obj.transform);
+                // Debug.Log($"Player object assigned for PlayerRef {player.RawEncoded} on client.");
+            }
         }
     }
-
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
@@ -36,28 +70,28 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (Input.GetKey(KeyCode.W))
         {
-           // data.direction += Vector3.forward;
+            // data.direction += Vector3.forward;
             data.vertical = 1;
         }
 
 
         if (Input.GetKey(KeyCode.S))
         {
-           // data.direction += Vector3.back;
+            // data.direction += Vector3.back;
             data.vertical = -1;
         }
 
 
         if (Input.GetKey(KeyCode.A))
         {
-           // data.direction += Vector3.left;
+            // data.direction += Vector3.left;
             data.horizontal = -1;
         }
 
 
         if (Input.GetKey(KeyCode.D))
         {
-           // data.direction += Vector3.right;
+            // data.direction += Vector3.right;
             data.horizontal = 1;
         }
 
