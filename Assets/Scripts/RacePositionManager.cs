@@ -46,10 +46,7 @@ public class RacePositionManager : NetworkBehaviour
         {
             GameUIManager.Instance.UpdateLapText(car.lapCount, totalNumberOfLaps);
         }
-        else
-        {
-            car.carCheckpointTracker.UpdateLapCount(car.lapCount);
-        }
+        car.carCheckpointTracker.UpdateLapCount(car.lapCount);
         CheckForRaceFinish(car);
     }
 

@@ -27,10 +27,10 @@ public class CarCheckpointTracker : NetworkBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (!Runner.IsServer)
-        {
-            return;
-        }
+        // if (!Runner.IsServer)
+        // {
+        //     return;
+        // }
         if (other.CompareTag("Checkpoint")) // Make sure checkpoints have this tag!
         {
             Checkpoint checkpoint = other.GetComponent<Checkpoint>();
@@ -64,17 +64,20 @@ public class CarCheckpointTracker : NetworkBehaviour
     }
     public void OnLapCountChanged()
     {
-        if (Runner.IsClient)
+        CarTracker carTracker = RacePositionManager.Instance.cars.Find(x => x.carCheckpointTracker == this);
+        carTracker.lapCount = LapCount;
+        if (carTracker.isMine)
         {
             GameUIManager.Instance.UpdateLapText(LapCount, RacePositionManager.Instance.totalNumberOfLaps);
         }
     }
 
+
     private void OnRaceFinsihed()
     {
         if (Runner.IsClient)
         {
-            if (IsRaceFinished )
+            if (IsRaceFinished)
             {
                 GameEventManager.Instance.FinishRace(RacePositionManager.Instance.cars);
             }
