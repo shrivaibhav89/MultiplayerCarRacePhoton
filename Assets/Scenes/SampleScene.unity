@@ -1842,7 +1842,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &924684217
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2034,8 +2034,9 @@ GameObject:
   - component: {fileID: 1002436488}
   - component: {fileID: 1002436487}
   - component: {fileID: 1002436486}
+  - component: {fileID: 1002436489}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2117,6 +2118,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002436484}
   m_CullTransparentMesh: 1
+--- !u!114 &1002436489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002436484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b698b51b0acb53f4ba76d0d00e51d27f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 1002436487}
+  raceTime: 30
 --- !u!1 &1003609358
 GameObject:
   m_ObjectHideFlags: 0
@@ -2540,6 +2555,7 @@ MonoBehaviour:
   playerPositionUIManager: {fileID: 796065380}
   gameFinishScreen: {fileID: 1916693694}
   lapText: {fileID: 1298301063}
+  raceTimer: {fileID: 1002436489}
 --- !u!114 &1127907584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2615,11 +2631,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1002436485}
   - {fileID: 1523111079}
   - {fileID: 1755858194}
   - {fileID: 1916693691}
   - {fileID: 924684217}
-  - {fileID: 1002436485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

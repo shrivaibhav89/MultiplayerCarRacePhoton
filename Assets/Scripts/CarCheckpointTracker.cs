@@ -10,6 +10,8 @@ public class CarCheckpointTracker : NetworkBehaviour
 
     [Networked, OnChangedRender(nameof(OnLapCountChanged))]
     public int LapCount { get; set; }
+
+ 
     public override void Spawned()
     {
         if (Object.HasInputAuthority)

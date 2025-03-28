@@ -10,7 +10,8 @@ public class RacePositionManager : NetworkBehaviour
     public List<CarTracker> cars; // Assign all car trackers
     public static RacePositionManager Instance;
     public int totalNumberOfLaps = 2;
-
+    
+    
     void Awake()
     {
         if (Instance == null)
@@ -74,6 +75,7 @@ public class RacePositionManager : NetworkBehaviour
     }
     void Update()
     {
+        
         if (cars.Count == 0)
         {
             return;

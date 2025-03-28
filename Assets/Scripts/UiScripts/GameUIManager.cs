@@ -10,6 +10,7 @@ public class GameUIManager : MonoBehaviour
     public PlayerPositionUIManager playerPositionUIManager;
     public GameFinishScreen gameFinishScreen;
     public Text lapText;
+    public RaceTimer raceTimer;
 
     public void Awake()
     {

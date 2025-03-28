@@ -78,6 +78,10 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        if(!RacePositionManager.Instance.IsRaceStart)
+        {
+            return;
+        }
         var data = new NetworkInputData();
 
         if (Input.GetKey(KeyCode.W))
