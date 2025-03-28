@@ -3,31 +3,32 @@ using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
+   
     [SerializeField] private Transform sawnPosition;
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-
+    private int spawnPlayerCount = 0;
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-
+        spawnPlayerCount++;
+        Transform spawnPoint = sawnPosition.GetChild(spawnPlayerCount);
         //Transform playerTransform = null;
         if (runner.IsServer)
         {
             // Create a unique position for the player
             Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 8, 0);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, sawnPosition.position * UnityEngine.Random.Range(0, 3), Quaternion.identity, player);
-            networkPlayerObject.name = "Player " + player.RawEncoded;
-
-            // Keep track of the player avatars for easy access
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab,spawnPoint.position , spawnPoint.rotation, player);
             _spawnedCharacters.Add(player, networkPlayerObject);
 
         }
+
         StartCoroutine(DelayedPlayerSync(runner, player));
         Debug.LogError("OnPlayerJoined" + runner.IsClient + " And  " + player.RawEncoded);
 
@@ -39,9 +40,20 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
         NetworkObject[] allObjects = FindObjectsOfType<NetworkObject>();
         foreach (var obj in allObjects)
         {
+            if (obj.gameObject.TryGetComponent(out CarCheckpointTracker carCheckpointTracker))
+            {
+                obj.gameObject.name = carCheckpointTracker.PlayerName.ToString();
+                RacePositionManager.Instance.AddNewCar(new CarTracker()
+                {
+                    carCheckpointTracker = carCheckpointTracker,
+                    racePosition = 0,
+                    isMine = obj.HasInputAuthority,
+                    networkObject = obj
+                });
+            }
             if (obj.HasInputAuthority)
             {
-                obj.name = " local Player " + obj.Runner.LocalPlayer.RawEncoded;
+               // obj.name = " local Player " + obj.Runner.LocalPlayer.RawEncoded;
                 if (obj.Runner.IsClient)
                 {
                     Runner.SetIsSimulated(obj, false);
@@ -121,7 +133,22 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private NetworkRunner _runner;
 
-    async void StartGame(GameMode mode)
+    private void OnEnable()
+    {
+        GameEventManager.Instance.OnRaceFinish.AddListener(OnRaceFinish);
+    }
+    private void OnDisable()
+    {
+        GameEventManager.Instance.OnRaceFinish.RemoveListener(OnRaceFinish);
+    }
+
+    private void OnRaceFinish(List<CarTracker> cars)
+    {
+       //_runner.Shutdown();
+    }
+
+
+    public async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
@@ -143,19 +170,5 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
-    }
-    private void OnGUI()
-    {
-        if (_runner == null)
-        {
-            if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
-            {
-                StartGame(GameMode.Host);
-            }
-            if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
-            {
-                StartGame(GameMode.Client);
-            }
-        }
     }
 }
