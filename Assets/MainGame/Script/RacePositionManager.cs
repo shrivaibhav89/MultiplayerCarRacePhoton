@@ -78,6 +78,7 @@ public class RacePositionManager : NetworkBehaviour
         if (car != null)
         {
             car.lapCount++;
+            car.lapCount = Mathf.Clamp(car.lapCount,1,totalNumberOfLaps);
         }
         if (car.isMine)
         {
