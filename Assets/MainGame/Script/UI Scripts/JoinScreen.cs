@@ -7,28 +7,21 @@ using UnityEngine.UI;
 
 public class JoinScreen : MonoBehaviour
 {
-    public Button joinButton;
     public InputField playerNameInputField;
-    public Button hostButton;
+    public Button startButton;
     string playerName;
     public PlayerSpawner playerSpawner;
     public void OnEnable()
     {
-        joinButton.onClick.AddListener(OnJoinButtonClicked);
-        hostButton.onClick.AddListener(OnHostButtonClicked);
+        startButton.onClick.AddListener(OnStartButtonClicked);
     }
     public void OnDisable()
     {
-        joinButton.onClick.RemoveListener(OnJoinButtonClicked);
-        hostButton.onClick.RemoveListener(OnHostButtonClicked);
+        startButton.onClick.RemoveListener(OnStartButtonClicked);
     }
-    public void OnJoinButtonClicked()
+    public void OnStartButtonClicked()
     {
-        JoinGame(GameMode.Client);
-    }
-    public void OnHostButtonClicked()
-    {
-        JoinGame(GameMode.Host);
+        JoinGame(GameMode.AutoHostOrClient);
     }
 
     public void JoinGame(GameMode gameMode)

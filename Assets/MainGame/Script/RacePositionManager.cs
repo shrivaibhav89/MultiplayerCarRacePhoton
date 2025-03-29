@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Fusion;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines; // If using Unity's Spline System
@@ -10,8 +11,8 @@ public class RacePositionManager : NetworkBehaviour
     public List<CarTracker> cars; // Assign all car trackers
     public static RacePositionManager Instance;
     public int totalNumberOfLaps = 2;
-    
-    
+    public bool isRaceStarted = false;
+
     void Awake()
     {
         if (Instance == null)
@@ -23,6 +24,31 @@ public class RacePositionManager : NetworkBehaviour
             Destroy(gameObject);
         }
     }
+    public void CheckAllPlayersReady()
+    {
+        if(cars.Count <=1)
+        {
+            return; // If there are less than 2 players, exit the method
+        }
+        foreach (CarTracker carTracker in cars)
+        {
+            if (!carTracker.carCheckpointTracker.IsReady)
+            {
+                return; // If any player is not ready, exit the method
+            }
+        }
+        
+        StartRace(); // Start the race if all players are ready
+    }
+
+    private void StartRace()
+    {
+        isRaceStarted = true;
+        GameUIManager.Instance.raceTimer.StartRace();
+        GameUIManager.Instance.DisableGameReadyUiScreen();
+    }
+
+
     public void AddNewCar(CarTracker carTracker)
     {
         // i want to check in cars if a object with same  car.carCheckpointTracker then return 
@@ -34,6 +60,16 @@ public class RacePositionManager : NetworkBehaviour
         cars.Add(carTracker);
         GameUIManager.Instance.playerPositionUIManager.CreatePlayerPositionUI(carTracker);
         GameUIManager.Instance.UpdateLapText(carTracker.lapCount, totalNumberOfLaps);
+    }
+    public void RemoveCar(CarCheckpointTracker carCheckpointTracker)
+    {
+        CarTracker car = cars.Find(x => x.carCheckpointTracker == carCheckpointTracker);
+        if (car != null)
+        {
+            cars.Remove(car);
+            GameUIManager.Instance.playerPositionUIManager.DestroyPlayerPositionUI(carCheckpointTracker);
+
+        }
     }
 
     public void AddLapForCar(CarCheckpointTracker carCheckpointTracker)
@@ -75,7 +111,7 @@ public class RacePositionManager : NetworkBehaviour
     }
     void Update()
     {
-        
+
         if (cars.Count == 0)
         {
             return;

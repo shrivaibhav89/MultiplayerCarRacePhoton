@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
-   
+
     [SerializeField] private Transform sawnPosition;
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
@@ -24,7 +24,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             // Create a unique position for the player
             Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 8, 0);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab,spawnPoint.position , spawnPoint.rotation, player);
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPoint.position, spawnPoint.rotation, player);
             _spawnedCharacters.Add(player, networkPlayerObject);
 
         }
@@ -53,7 +53,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
             }
             if (obj.HasInputAuthority)
             {
-               // obj.name = " local Player " + obj.Runner.LocalPlayer.RawEncoded;
+                // obj.name = " local Player " + obj.Runner.LocalPlayer.RawEncoded;
                 if (obj.Runner.IsClient)
                 {
                     Runner.SetIsSimulated(obj, false);
@@ -78,7 +78,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        if(!RacePositionManager.Instance.IsRaceStart)
+        if (RacePositionManager.Instance.isRaceStarted == false)
         {
             return;
         }
@@ -148,7 +148,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private void OnRaceFinish(List<CarTracker> cars)
     {
-       //_runner.Shutdown();
+        //_runner.Shutdown();
     }
 
 

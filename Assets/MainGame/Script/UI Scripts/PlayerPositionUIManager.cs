@@ -15,6 +15,18 @@ public class PlayerPositionUIManager : MonoBehaviour
         playerPositionUI.text = car.carCheckpointTracker.name;
         playerPositionUIList.Add(playerPositionUI);
     }
+    public void DestroyPlayerPositionUI(CarCheckpointTracker car)
+    {
+        for (int i = 0; i < playerPositionUIList.Count; i++)
+        {
+            if (playerPositionUIList[i].text == car.name)
+            {
+                Destroy(playerPositionUIList[i].gameObject);
+                playerPositionUIList.RemoveAt(i);
+                break;
+            }
+        }
+    }
     public void UpdatePlayersPosition()
     {
         if (playerPositionUIList.Count == 0)

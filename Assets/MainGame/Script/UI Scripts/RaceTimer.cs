@@ -6,21 +6,31 @@ using UnityEngine.UI;
 public class RaceTimer : MonoBehaviour
 {
     public Text timerText;
-    public float raceTime = 30;
+    private float raceTime;
+    public float currentTime{ get; private set; }
+    public bool isTimerRunning;
+   
     public void StartRace()
     {
+        isTimerRunning = true;
+        raceTime = GameManager.Instance.totalRaceTimeInSeconds;
         StartCoroutine(UpdateTimer());
+    }
+    public void StopTimer()
+    {
+        isTimerRunning = false;
     }
     public IEnumerator UpdateTimer()
     {
         float timeLeft = raceTime;
-        while (timeLeft>0)
+        while (timeLeft>0 && isTimerRunning)
         {
             timeLeft -= Time.deltaTime;
             UpdateTimerText(timeLeft);
+            currentTime = timeLeft;
             yield return null;
         }
-        timeLeft = 0;
+       /// timeLeft = 0;
         UpdateTimerText(timeLeft);
         GameEventManager.Instance.OnRaceFinish.Invoke(RacePositionManager.Instance.cars);
     }

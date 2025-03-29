@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
     public string playerName;
+    public CarCheckpointTracker userPlayerCar;
+    public float totalRaceTimeInSeconds = 300f; // 5 minutes
+    public float raceDuration;
 
     private void OnEnable()
     {
@@ -48,6 +51,8 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Winner of Race from Game Manager " + cars[0].carCheckpointTracker.name);
         StopControllForPlayerCar(cars);
+        //calculate race duration
+        raceDuration = totalRaceTimeInSeconds - GameUIManager.Instance.raceTimer.currentTime;
     }
     private void StopControllForPlayerCar(List<CarTracker> cars)
     {

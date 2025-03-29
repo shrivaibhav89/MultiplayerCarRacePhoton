@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,18 +7,21 @@ public class CarCheckpointTracker : NetworkBehaviour
 {
     [HideInInspector] public int currentCheckpointIndex = 0;
     [Networked] public NetworkString<_16> PlayerName { get; set; }
+    [Networked, OnChangedRender(nameof(OnRadyChange))] public NetworkBool IsReady { get; set; }
     [Networked, OnChangedRender(nameof(OnRaceFinsihed))] public NetworkBool IsRaceFinished { get; set; }
 
     [Networked, OnChangedRender(nameof(OnLapCountChanged))]
     public int LapCount { get; set; }
 
- 
+
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
         {
             // Set player's name when they join
             RPC_SetPlayerName(GameManager.Instance.playerName);
+            GameManager.Instance.userPlayerCar = this;
+            GameUIManager.Instance.EnableGameReadyUiScreen();
         }
     }
 
@@ -26,6 +30,12 @@ public class CarCheckpointTracker : NetworkBehaviour
     {
         PlayerName = newName;
         Debug.Log($"Player name set to {newName}");
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SetPlayerReady(bool ready)
+    {
+        IsReady = ready;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -85,6 +95,19 @@ public class CarCheckpointTracker : NetworkBehaviour
             }
         }
     }
+    private void OnRadyChange()
+    {
+         RacePositionManager.Instance.CheckAllPlayersReady();
+    }
+    public void SetReady()
+    {
+        if (Object.HasInputAuthority)
+        {
+            // Set player's name when they join
+            RPC_SetPlayerReady(true);
+        }
+    }
+   
 
     public bool HasPassedAllCheckpoints()
     {

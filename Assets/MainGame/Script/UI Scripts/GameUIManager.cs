@@ -11,6 +11,7 @@ public class GameUIManager : MonoBehaviour
     public GameFinishScreen gameFinishScreen;
     public Text lapText;
     public RaceTimer raceTimer;
+    public GameReadyUiScreen gameReadyUiScreen;
 
     public void Awake()
     {
@@ -39,10 +40,19 @@ public class GameUIManager : MonoBehaviour
     {
         gameFinishScreen.gameObject.SetActive(true);
         gameFinishScreen.OnRaceFinish(arg0);
+        raceTimer.StopTimer();
     }
     public void UpdateLapText(int currentLap, int totalLaps)
     {
         lapText.text = $"Lap - {currentLap+1}/{totalLaps}";
+    }
+    public void EnableGameReadyUiScreen()
+    {
+        gameReadyUiScreen.gameObject.SetActive(true);
+    }
+    public void DisableGameReadyUiScreen()
+    {
+        gameReadyUiScreen.gameObject.SetActive(false);
     }
 
 
